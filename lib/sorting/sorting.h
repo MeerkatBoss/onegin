@@ -3,28 +3,15 @@
 
 #include <stddef.h>
 
-typedef int (*comparator)(void*, void*);
+typedef int (*comparator)(const void*, const void*);
 
 typedef void (*sorter)(void*, void*, size_t, comparator);
 
+int compare_strings(const void *a, const void *b);
 
-#define COMPARATOR(name) compare_##name
-#define DECLARE_COMPARATOR(name) int COMPARATOR(name)(void* a, void* b)
+int compare_int(const void *a, const void *b);
 
-DECLARE_COMPARATOR(char);
-DECLARE_COMPARATOR(schar);
-DECLARE_COMPARATOR(short);
-DECLARE_COMPARATOR(ushort);
-DECLARE_COMPARATOR(int);
-DECLARE_COMPARATOR(uint);
-DECLARE_COMPARATOR(long);
-DECLARE_COMPARATOR(ulong);
-DECLARE_COMPARATOR(llong);
-DECLARE_COMPARATOR(ullong);
-DECLARE_COMPARATOR(string);
-
-#undef DECLARE_COMPARATOR
-
+void memswap(void* a, void* b, size_t size);
 
 void insertion_sort(void* start, void* end,
                     size_t element_size, comparator cmp);
