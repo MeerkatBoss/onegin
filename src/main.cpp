@@ -21,14 +21,14 @@ int main()
     for (int i = 0; i<10; i++)
         puts(arr[i]);
 
-    const TextLines *tlines = read_file("hamlet.txt");
-    insertion_sort(tlines->lines, tlines->lines + tlines->line_count,
+    const TextLines tlines = read_file("hamlet.txt");
+    insertion_sort(tlines.lines, tlines.lines + tlines.line_count,
                     sizeof(char*), compare_strings);
     
     FILE *output = fopen("result.txt", "w");
-    for (int i = 0; i < tlines->line_count; i++)
+    for (size_t i = 0; i < tlines.line_count; i++)
     {
-        fputs(tlines->lines[i], output);
+        fputs(tlines.lines[i], output);
         fputc('\n', output);
     }
     fclose(output);

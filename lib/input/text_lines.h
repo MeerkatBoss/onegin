@@ -28,12 +28,12 @@ typedef struct
 } TextLines;
 
 /**
- * @brief Allocates TextLines, opens specified file
+ * @brief Creates TextLines, reads specified file
  * 
  * @param[in] path - path to opened file
  * @return Allocated TextLines with opened file 
  */
-const TextLines *read_file(const char* path);
+const TextLines read_file(const char* path);
 
 /**
  * @brief Frees allocated TextLines and closes associated file

@@ -14,7 +14,7 @@
  * @param[out] file_size - pointer to file size
  * @return file contents
  */
-static char* map_file(const char *path, size_t *file_size)
+static size_t map_file(const char *path, char **text)
 {
     assert(path != NULL);
 
@@ -26,7 +26,7 @@ static char* map_file(const char *path, size_t *file_size)
     }
 
     /* Get file size */
-    struct stat file_stat;
+    struct stat file_stat = {};
     if (fstat(fd, &file_stat) < 0) /* Cannot read file, errno set by fstat */
     {
         int tmp = errno;
@@ -46,28 +46,35 @@ static char* map_file(const char *path, size_t *file_size)
         return NULL;
     }
 
-    *file_size = (size_t)file_stat.st_size + 1u;
-    return mapping;
+    *text = mapping;
+    return (size_t)file_stat.st_size + 1u;
 }
 
-const TextLines *read_file(const char *path)
+static size_t split_text(char *text, size_t text_len)
 {
-    char *text = NULL;
-    size_t text_len = 0;
-
-    text = map_file(path, &text_len);
-
-    if (text == NULL)
-        return NULL;
-
     size_t line_count = 1;
-    for (size_t i = 0; i < text_len - 1; i++) /* NUL-terminate each line */
+    for (size_t i = 0; i < text_len - 1; i++)
         if (text[i] == '\n')
         {
             text[i] = '\0';
             line_count++;
         }
     text[text_len - 1] = '\0';
+    return line_count;
+}
+
+const TextLines read_file(const char *path)
+{
+    char *text = NULL;
+    size_t text_len = map_file(path, &text);
+
+    if (text == NULL)
+        return {.text = NULL,
+                .text_len = 0,
+                .lines = NULL,
+                .line_count = 0};
+
+    size_t line_count = split_text(text, text_len);
 
     char ** lines = (char**) calloc(line_count, sizeof(char*));
     char *last_line = text; /* Pointer to the beginning of last line */
@@ -80,17 +87,12 @@ const TextLines *read_file(const char *path)
             line_num++; /* Increment line number */
         }
 
-    /* Allocate struct */
-    TextLines *txlines = (TextLines*) calloc(1, sizeof(TextLines));
-
-    /* Store file contents */
-    *txlines = {
+    return {
             .text = (const char*) text,
             .text_len = text_len,
             .lines = (const char**) lines,
             .line_count = line_count
         };
-    return txlines;
 }
 
 void close_reader(const TextLines *txlines)
@@ -100,5 +102,4 @@ void close_reader(const TextLines *txlines)
 
     munmap((char *)txlines->text, txlines->text_len);
     free((char **)txlines->lines);
-    free((void *)txlines);
 }
