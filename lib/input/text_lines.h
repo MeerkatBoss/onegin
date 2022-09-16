@@ -2,7 +2,7 @@
 #define TEXT_LINES_H
 
 /**
- * @file io_utils.h
+ * @file text_lines.h
  * @author MeerkatBoss
  * @brief Contains helper functions for IO
  * @version 0.1
@@ -14,18 +14,47 @@
 
 #include <stdio.h>
 
+typedef struct
+{
+    size_t line_number;
+    size_t line_length;
+    const char *line;
+} Line;
+
+
 /**
- * @brief Wraps FILE*, provides access to line-by-line
- * reading of a file. Counts lines automatically,
- * starting at 0
+ * @brief 
+ * Stores lines of a text file
  */
 typedef struct
 {
     const char *text;
     size_t text_len;
-    const char ** lines;
+    Line *lines;
     size_t line_count;
 } TextLines;
+
+/**
+ * @brief
+ * Compares lines lexicographically,
+ * ignoring whitespaces and punctuation
+ * 
+ * @param[in] a - first `Line`
+ * @param[in] b - second `Line`
+ * @return Comparison result
+ */
+int compare_lines(const void* a, const void* b);
+
+/**
+ * @brief
+ * Compares lines lexicographically starting from line end,
+ * ignoring whitespaces and punctuation
+ * 
+ * @param[in] a - first `Line`
+ * @param[in] b - second `Line`
+ * @return Comparison result
+ */
+int compare_lines_inverse(const void *a, const void *b);
 
 /**
  * @brief Creates TextLines, reads specified file
