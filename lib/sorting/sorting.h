@@ -26,6 +26,7 @@ typedef int comparator_t(const void*, const void*);
  */
 typedef void (*sorter_t)(void* arr, size_t arr_len,
                        size_t element_size, comparator_t* cmp);
+// TODO: What's the use of this?)
 
 /**
  * @brief

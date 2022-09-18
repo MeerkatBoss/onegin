@@ -8,6 +8,7 @@
 
 int main()
 {
+    // TODO: Ok, as a fast solution, but IMO not enough for a final version)
     setlocale(LC_CTYPE, "ru_RU.cp1251");
 
     Line arr[10] = //TODO: extract tests
@@ -27,7 +28,15 @@ int main()
     for (int i = 0; i<10; i++)
         puts(arr[i].line);
     
+    // TODO: Why name this "tlines"?) Terminator Lines? I'LL BE BACK!
+    //       if you'd just name it "text" or "lines" or "text_lines",
+    //       it would be less confusing.
     TextLines tlines = read_file("IO/onegin.txt");
+    // TODO:                      ^~ Not really an "IO",
+    //       more like "resources" or "data" or whatever, just not IO
+    //
+    // Also, "IO" (with all capitals), breaks your naming
+    // convention (of naming dirs in lowercase)
     if (tlines.text == NULL)
     {
         perror("Error reading input file");
