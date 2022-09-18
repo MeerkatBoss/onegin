@@ -4,12 +4,11 @@
 #include "sorting.h"
 #include "text_lines.h"
 #include "text_utils.h"
+#include <ctype.h>
 
 int main()
 {
-    //TODO: use 1251 encoding
-    //setlocale(LC_ALL, "CP1251");
-    //setlocale(LC_NUMERIC, "C");
+    setlocale(LC_CTYPE, "ru_RU.cp1251");
 
     Line arr[10] = //TODO: extract tests
     {
@@ -28,7 +27,7 @@ int main()
     for (int i = 0; i<10; i++)
         puts(arr[i].line);
     
-    TextLines tlines = read_file("IO/hamlet.txt");
+    TextLines tlines = read_file("IO/onegin.txt");
     if (tlines.text == NULL)
     {
         perror("Error reading input file");
