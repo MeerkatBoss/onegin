@@ -4,7 +4,7 @@
 /**
  * @file text_utils.h
  * @author MeerkatBoss
- * @brief Contains utility input/output fucntions
+ * @brief Miscelanious input/output function
  * @version 0.1
  * @date 2022-09-16
  * 
@@ -16,7 +16,7 @@
 #include <stdio.h>
 
 /**
- * @brief Outputs `Line` array 
+ * @brief Output `Line` array to stream
  * 
  * @param[in] lines - array to print
  * @param[in] line_count - number of elements in `lines`

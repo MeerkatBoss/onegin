@@ -4,7 +4,7 @@
 /**
  * @file sorting.h
  * @author MeerkatBoss
- * @brief Contains sorting functions
+ * @brief Sorter functions
  * @version 0.1
  * @date 2022-09-16
  * 
@@ -49,7 +49,7 @@ int compare_int(const void *a, const void *b);
 
 /**
  * @brief
- * Exchanges given number of bytes between given
+ * Exchange given number of bytes between given
  * memory areas
  * 
  * @param[inout] a - address of the first  memory area
@@ -66,8 +66,8 @@ void memswap(void* a, void* b, size_t size, void* buf);
 
 /**
  * @brief 
- * Sorts array using given comparator.
- * Uses insertion sort algorithm.
+ * Sort array using given comparator
+ * with insertion sort algorithm.
  * 
  * @param[inout] arr - array to sort
  * @param[in] arr_len - number of elements in `arr`
@@ -79,8 +79,8 @@ void insertion_sort(void* arr, size_t arr_len,
 
 /**
  * @brief 
- * Sorts array using given comparator.
- * Uses merge sort algorithm.
+ * Sort array using given comparator
+ * with merge sort algorithm.
  * 
  * @param[inout] arr - array to sort
  * @param[in] arr_len - number of elements in `arr`
@@ -94,8 +94,8 @@ void merge_sort(void* arr, size_t arr_len,
 
 /**
  * @brief 
- * Sorts array using given comparator.
- * Uses quick sort algorithm.
+ * Sort array using given comparator
+ * with quick sort algorithm.
  * 
  * @param[inout] arr - array to sort
  * @param[in] arr_len - number of elements in `arr`
