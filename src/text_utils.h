@@ -16,8 +16,7 @@
 #include <stdio.h>
 
 /**
- * @brief Outputs `Line` array // TODO: There's not a single word about line numbers
- *                                      which it also prints.
+ * @brief Outputs `Line` array 
  * 
  * @param[in] lines - array to print
  * @param[in] line_count - number of elements in `lines`

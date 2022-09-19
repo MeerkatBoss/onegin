@@ -8,9 +8,8 @@ void print_lines(const Line *lines, size_t line_count, FILE *stream)
 
     for (size_t i = 0; i < line_count; i++)
     {
-        fprintf(stream, "%4zu: %s\n",
-                lines[i].line_number,
-                lines[i].line);
+        fputs(lines[i].line, stream);
+        fputc('\n', stream);
     }
-    putc('\n', stream);
+    fputc('\n', stream);
 }

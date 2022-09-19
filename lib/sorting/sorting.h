@@ -26,7 +26,6 @@ typedef int comparator_t(const void*, const void*);
  */
 typedef void (*sorter_t)(void* arr, size_t arr_len,
                        size_t element_size, comparator_t* cmp);
-// TODO: What's the use of this?)
 
 /**
  * @brief
@@ -56,11 +55,14 @@ int compare_int(const void *a, const void *b);
  * @param[inout] a - address of the first  memory area
  * @param[inout] b - address of the second memory area
  * @param[in] size - number of bytes to exchange
+ * @param[out] buf - intermediate swap buffer. If this
+ * parameter is `NULL`, the buffer will be allocated
+ * inside function
  * 
  * @warning 
  * If memory areas overlap the result is undefined
  */
-void memswap(void* a, void* b, size_t size);
+void memswap(void* a, void* b, size_t size, void* buf);
 
 /**
  * @brief 

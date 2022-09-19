@@ -46,21 +46,6 @@
  */
 typedef struct
 {
-    // TODO: is line number really a parameter of line?
-    //     I don't think, so!
-    //
-    // For example, let's take line from Hamlet:
-    //     "There is nothing either good or bad, but thinking makes it so."
-    //
-    // Do you really need to know its number to say 
-    // that it's a line? No, you don't.
-    //
-    // So either struct's name is misleading, or you
-    // don't need to store a line number here)
-    //
-    // There's a better way. Can you find it?  
-
-    size_t line_number;
     size_t line_length;
     const char *line;
 } Line;
@@ -78,41 +63,39 @@ typedef struct
     size_t line_count;
 } TextLines;
 
+enum direction
+{
+    BACKWARD = -1,
+    FORWARD  =  1
+};
+
 /**
  * @brief 
  * Skips non-alphanumeric characters in *`str`, moving pointer by
  * `step`. Ensures that the pointer is moved by less than `max_skip`
  * 
- * @param[inout] str - pointer to string
+ * @param[in] str - string
  * @param[in] max_skip - maximum allowed number of characters to skip
- * @param[in] step - movement step
+ * @param[in] dir - movement direction
  * @return Number of skipped characters
  */
-size_t skip_not_alnum(const char **str, size_t max_skip, int step);
+size_t skip_not_alnum(const char *str, size_t max_skip, enum direction dir);
+
 
 /**
  * @brief
- * Compares two strings with given length and step size
- * TODO:                                      ^~~~
- *       Not obvious at all that step should be -1 or 1,
- *       and without this realization purpose of this function
- *       is very confusing.
- * 
- *       Document it! Or, create use "enum direction" like,
- *       enum direction { BACKWARD = -1, FORWARD = 1 }.
- *        
- *       And corresponding parameter, e.g. "direction step"
+ * Compares two strings with given length and direction
  * 
  * @param[in] str1 - first string
  * @param[in] str1_len - first string length
  * @param[in] str2 - second string
  * @param[in] str2_len - second string length
- * @param[in] step - movement step
+ * @param[in] dir - movement direction
  * @return Comparison result
  */
-int compare_strings_with_steps(const char* str1, size_t str1_len,
+int bidirectional_compare_strings(const char* str1, size_t str1_len,
                               const char* str2, size_t str2_len,
-                              int step);
+                              enum direction dir);
 
 /**
  * @brief
@@ -143,7 +126,7 @@ int compare_lines_inverse(const void *a, const void *b);
  * @param[in] b - second `Line`
  * @return Comparison result
  */
-int compare_lines_by_number(const void *a, const void *b);
+int compare_lines_by_address(const void *a, const void *b);
 
 /**
  * @brief Creates `TextLines` instance, reads specified file

@@ -70,11 +70,8 @@ TextLines read_file(const char *path)
     char *text = NULL;
     size_t text_len = map_file(path, &text);
 
-    if (text == NULL) // TODO: I'd just use {} to construct TextLines in case of error 
-        return {.text = NULL,
-                .text_len = 0,
-                .lines = NULL,
-                .line_count = 0};
+    if (text == NULL)
+        return {};  //TODO: Is this portable or g++-only?
 
     size_t line_count = split_text(text, text_len);
 
@@ -85,7 +82,6 @@ TextLines read_file(const char *path)
         if (text[i] == '\0') /* Line ended */
         {
             lines[line_num] = {
-                .line_number = line_num,
                 .line_length = (size_t)(&text[i] - last_line),
                 .line = last_line
             };
@@ -113,25 +109,23 @@ void dispose_lines(TextLines *txlines)
     txlines->lines = NULL;
 }
 
-size_t skip_not_alnum(const char **str, size_t max_skip, int step)
+size_t skip_not_alnum(const char *str, size_t max_skip, enum direction dir)
 {
-    size_t abs_step = (size_t) (step >= 0 ? step : -step);
     size_t pos = 0;
 
-    for(pos = 0; pos < max_skip; pos += abs_step)
+    for(pos = 0; pos < max_skip; pos++)
     {
-        if (isalnum(**str))
-            break;; // TODO: doubled semicolons?)
-        *str += step;
+        if (isalnum(*str))
+            break;
+        str += dir;
     }
     return pos;
 }
 
-int compare_strings_with_steps(const char* str1, size_t str1_len,
+int bidirectional_compare_strings(const char* str1, size_t str1_len,
                                const char* str2, size_t str2_len,
-                               int step)
+                               enum direction dir)
 {
-    size_t abs_step = (size_t) (step >= 0 ? step : -step);
     size_t index1 = 0, index2 = 0;
 
     // TODO: i think this implementation is a bit too convoluted
@@ -143,11 +137,13 @@ int compare_strings_with_steps(const char* str1, size_t str1_len,
     for(
         ;
         index1 < str1_len && index2 < str2_len;
-        index1 += abs_step, index2 += abs_step, str1 += step, str2 += step
+        index1++, index2++, str1 += dir, str2 += dir
     )
     {
-        size_t skip1 = skip_not_alnum(&str1, str1_len - index1, step);
-        size_t skip2 = skip_not_alnum(&str2, str2_len - index2, step);
+        size_t skip1 = skip_not_alnum(str1, str1_len - index1, dir);
+        size_t skip2 = skip_not_alnum(str2, str2_len - index2, dir);
+        str1 += dir*(long long)skip1;
+        str2 += dir*(long long)skip2;
         index1 += skip1;
         index2 += skip2;
 
@@ -195,10 +191,10 @@ int compare_lines(const void* a, const void* b)
     assert(a_line->line != NULL);
     assert(b_line->line != NULL);
 
-    return compare_strings_with_steps(
+    return bidirectional_compare_strings(
         a_line->line, a_line->line_length,
         b_line->line, b_line->line_length,
-        1
+        FORWARD
     );
 }
 
@@ -212,24 +208,25 @@ int compare_lines_inverse(const void *a, const void *b)
     assert(a_line->line != NULL);
     assert(b_line->line != NULL);
 
-    return compare_strings_with_steps(
+    return bidirectional_compare_strings(
         a_line->line + a_line->line_length - 1, a_line->line_length,
         b_line->line + b_line->line_length - 1, b_line->line_length,
-        -1
+        BACKWARD
     );
 }
 
-int compare_lines_by_number(const void *a, const void *b)
+int compare_lines_by_address(const void *a, const void *b)
 {
     assert(a != NULL);
     assert(b != NULL);
     const Line *a_line = (const Line*) a;
     const Line *b_line = (const Line*) b;
 
-    if (a_line->line_number < b_line->line_number)
-        return -1;
-    // TODO: else after return is unnecessary
-    else if (a_line->line_number > b_line->line_number)
-        return 1;
-    return 0;
+    //TODO: do I need to compare `.line` or can I simply
+    //compare `a` with `b`?
+    if (a_line->line == b_line->line)
+        return 0;
+    return a_line->line < b_line->line
+            ? -1
+            :  1;
 }
