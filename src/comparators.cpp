@@ -9,6 +9,8 @@ static size_t skip_not_alnum(const char *str,
                              enum direction dir,
                              wchar_t *lst)
 {
+    /*printf("\tskip: [%#3lx]\n",
+                (unsigned long)str % 0x1000);*/
     size_t pos = 0;
     const unsigned char MASK = 0xC0; /*1100 0000 two highest bits*/
     const unsigned char CONTINUATION = 0x80; /*10xx xxxx UTF8 continuation byte*/
@@ -21,15 +23,16 @@ static size_t skip_not_alnum(const char *str,
             continue;
         }
 
-        int c_len = mbtowc(NULL, str, 0);   /*non-negative*/
         wchar_t wc = L'\0';
-        mbtowc(&wc, str, (size_t)c_len);
-        if (iswalnum((wint_t)wc))
+        int c_len = mbtowc(&wc, str, MB_CUR_MAX);
+        /*printf("\t\tU+%04x is %d bytes long\n", (wint_t)wc, c_len);*/
+        if (iswalpha((wint_t)wc))
         {
+            /*printf("\t\twalnum\n");*/
             *lst = wc;
             break;
         }
-        
+        /*printf("\t\tnot walnum\n");*/
         str += dir * (long long) c_len;
     }
     return pos;
@@ -68,6 +71,7 @@ int bidirectional_compare_strings(const char* str1, size_t str1_len,
         if (remaining1 == 0 ||
             remaining2 == 0)
         {
+            /*printf("\t\tWhole line skipped\n");*/
             if (remaining1 == remaining2)
                 return 0;
             
@@ -78,11 +82,13 @@ int bidirectional_compare_strings(const char* str1, size_t str1_len,
 
         wint_t lwc1 = towlower((wint_t)wc1);
         wint_t lwc2 = towlower((wint_t)wc2);
+        /*printf("\t\tU+%04x ?<>? U+%04x\n", lwc1, lwc2);*/
         if (lwc1 != lwc2)
             return lwc1 < lwc2
                     ? -1
                     :  1;
     }
+    /*printf("\t\tCommon prefix\n");*/
     if (index1 >= str1_len ||
         index2 >= str2_len)
     {
@@ -106,6 +112,12 @@ int compare_lines(const void* a, const void* b)
 
     assert(a_line->line != NULL);
     assert(b_line->line != NULL);
+
+    /*printf("\tcompare: [%#3lx]->[%#3lx] ?<>? [%#3lx]->[%#3lx]\n",
+                (unsigned long)a % 0x1000,
+                (unsigned long)a_line->line % 0x1000,
+                (unsigned long)b % 0x1000,
+                (unsigned long)b_line->line % 0x1000);*/
 
     return bidirectional_compare_strings(
         a_line->line, a_line->line_length,

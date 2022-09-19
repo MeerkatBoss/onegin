@@ -47,17 +47,22 @@ void insertion_sort(void *arr, size_t arr_len,
     char* end = start + arr_len*element_size;
     for (char *i = start; i < end; i += element_size)
         for(char *j = i - element_size; j >= start; j -= element_size)
+        {
+            /*printf("[%#3lx] & [%#3lx]\n",
+                (unsigned long)j % 0x1000,
+                (unsigned long)(j + element_size) % 0x1000);*/
             if (cmp(j, j + element_size) > 0)
             {
-                printf("[%#3lx] > [%#3lx]\n",
+                /*printf("[%#3lx] > [%#3lx]\n\n",
                     (unsigned long)j % 0x1000,
-                    (unsigned long)(j + element_size) % 0x1000);
+                    (unsigned long)(j + element_size) % 0x1000);*/
                 memswap(j, j + element_size, element_size, buf);
             }
-            else
-                printf("[%#3lx] < [%#3lx]\n",
+            /*else
+                printf("[%#3lx] < [%#3lx]\n\n",
                     (unsigned long)j % 0x1000,
-                    (unsigned long)(j + element_size) % 0x1000);
-    
+                    (unsigned long)(j + element_size) % 0x1000);*/
+
+        }
     free(buf);
 }
