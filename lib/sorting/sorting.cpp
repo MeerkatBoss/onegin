@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <stdio.h>
 
 int compare_strings(const void* a, const void* b)
 {
@@ -47,7 +48,16 @@ void insertion_sort(void *arr, size_t arr_len,
     for (char *i = start; i < end; i += element_size)
         for(char *j = i - element_size; j >= start; j -= element_size)
             if (cmp(j, j + element_size) > 0)
+            {
+                printf("[%#3lx] > [%#3lx]\n",
+                    (unsigned long)j % 0x1000,
+                    (unsigned long)(j + element_size) % 0x1000);
                 memswap(j, j + element_size, element_size, buf);
+            }
+            else
+                printf("[%#3lx] < [%#3lx]\n",
+                    (unsigned long)j % 0x1000,
+                    (unsigned long)(j + element_size) % 0x1000);
     
     free(buf);
 }
