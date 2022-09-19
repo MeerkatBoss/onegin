@@ -70,7 +70,7 @@ TextLines read_file(const char *path)
     char *text = NULL;
     size_t text_len = map_file(path, &text);
 
-    if (text == NULL)
+    if (text == NULL) // TODO: I'd just use {} to construct TextLines in case of error 
         return {.text = NULL,
                 .text_len = 0,
                 .lines = NULL,
@@ -121,7 +121,7 @@ size_t skip_not_alnum(const char **str, size_t max_skip, int step)
     for(pos = 0; pos < max_skip; pos += abs_step)
     {
         if (isalnum(**str))
-            break;;
+            break;; // TODO: doubled semicolons?)
         *str += step;
     }
     return pos;
@@ -133,6 +133,12 @@ int compare_strings_with_steps(const char* str1, size_t str1_len,
 {
     size_t abs_step = (size_t) (step >= 0 ? step : -step);
     size_t index1 = 0, index2 = 0;
+
+    // TODO: i think this implementation is a bit too convoluted
+    //       for what it does (it's not as complex as this looks)
+    //
+    // See, if you can clean this up a bit?) (Mainly reduce number
+    // of edge cases in this code)
 
     for(
         ;
@@ -222,6 +228,7 @@ int compare_lines_by_number(const void *a, const void *b)
 
     if (a_line->line_number < b_line->line_number)
         return -1;
+    // TODO: else after return is unnecessary
     else if (a_line->line_number > b_line->line_number)
         return 1;
     return 0;

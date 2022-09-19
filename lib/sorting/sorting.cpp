@@ -24,6 +24,14 @@ void memswap(void *a, void *b, size_t size)
     assert(a != NULL);
     assert(b != NULL);
 
+    // TODO: Don't you think it's a bit too much to
+    //       call calloc this much in a sort?)
+    //
+    //       I'd say, even one dynamic allocation is
+    //       too expensive for sorting.
+    //
+    //       At least, make it reuse one allocation.
+    //       Also, you forgot to free your memory!
     void *tmp = calloc(1, size);
     memcpy(tmp, a, size);
     memcpy(a, b, size);
