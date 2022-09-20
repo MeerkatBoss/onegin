@@ -14,13 +14,10 @@ static size_t skip_not_alnum(const char *str,
     const unsigned char MASK         = 0xC0; /*1100 0000 two highest bits*/
     const unsigned char CONTINUATION = 0x80; /*10xx xxxx UTF8 continuation byte*/
 
-    for(pos = 0; pos < max_skip; pos++)
+    for(pos = 0; pos < max_skip; pos++, str+=dir)
     {
         if ((*str & MASK) == CONTINUATION)
-        {
-            str += dir;
             continue;
-        }
 
         wchar_t wc = L'\0';
         int c_len = mbtowc(&wc, str, MB_CUR_MAX);
@@ -28,7 +25,6 @@ static size_t skip_not_alnum(const char *str,
         *lst = wc;
         if (iswalpha((wint_t)wc))
             break;
-        str += dir * (long long) c_len;
     }
     return pos;
 }
@@ -48,10 +44,10 @@ int bidirectional_compare_strings(const char* str1, size_t str1_len,
         wchar_t wc1 = L'\0', wc2 = L'\0';
         size_t skip1 = skip_not_alnum(str1, str1_len - index1, dir, &wc1);
         size_t skip2 = skip_not_alnum(str2, str2_len - index2, dir, &wc2);
-        str1 += dir*(long long)skip1;
-        str2 += dir*(long long)skip2;
-        index1 += skip1;
-        index2 += skip2;
+        str1        += dir*(long long)skip1;
+        str2        += dir*(long long)skip2;
+        index1      += skip1;
+        index2      += skip2;
 
         long long remaining1 = (long long)str1_len - (long long)index1;
         long long remaining2 = (long long)str2_len - (long long)index2;

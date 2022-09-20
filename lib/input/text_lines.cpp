@@ -72,7 +72,7 @@ TextLines read_file(const char *path)
     size_t text_len = map_file(path, &text);
 
     if (text == NULL)
-        return {};  //TODO: Is this portable or g++-only?
+        return {};
 
     size_t line_count = split_text(text, text_len);
 
@@ -86,8 +86,8 @@ TextLines read_file(const char *path)
                 .line_length = (size_t)(&text[i] - last_line),
                 .line = last_line
             };
-            line_num++; /* Increment line number */
-            last_line = &text[i + 1]; /* Next line begins on i+1st position */
+            line_num++;                 /* Increment line number */
+            last_line = &text[i + 1];   /* Next line begins on i+1st position */
         }
 
     return {
