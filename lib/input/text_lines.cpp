@@ -1,4 +1,3 @@
-#include "text_lines.h"
 #include <assert.h>
 #include <errno.h>
 #include <stdlib.h>
@@ -7,6 +6,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <ctype.h>
+
+#include "text_lines.h"
 
 /**
  * @brief Maps file lines to memory

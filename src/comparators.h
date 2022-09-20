@@ -2,6 +2,7 @@
 #define COMPARATORS_H
 
 #include <stddef.h>
+
 #include "text_lines.h"
 
 enum direction
@@ -33,6 +34,10 @@ int bidirectional_compare_strings(const char* str1, size_t str1_len,
  * @param[in] a - first `Line`
  * @param[in] b - second `Line`
  * @return Comparison result
+ * 
+ * @note
+ * This function assumes that strings, stored in
+ * `Line` have UTF8-compatible encoding
  */
 int compare_lines(const void* a, const void* b);
 
@@ -44,6 +49,10 @@ int compare_lines(const void* a, const void* b);
  * @param[in] a - first `Line`
  * @param[in] b - second `Line`
  * @return Comparison result
+ * 
+ * @note
+ * This function assumes that strings, stored in
+ * `Line` have UTF8-compatible encoding
  */
 int compare_lines_inverse(const void *a, const void *b);
 
@@ -53,6 +62,10 @@ int compare_lines_inverse(const void *a, const void *b);
  * @param[in] a - first `Line`
  * @param[in] b - second `Line`
  * @return Comparison result
+ * 
+ * @note
+ * This function assumes that strings, stored in
+ * `Line` have UTF8-compatible encoding
  */
 int compare_lines_by_address(const void *a, const void *b);
 

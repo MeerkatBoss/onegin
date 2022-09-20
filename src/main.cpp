@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
+#include <ctype.h>
+
 #include "sorting.h"
 #include "text_lines.h"
 #include "text_utils.h"
 #include "comparators.h"
-#include <ctype.h>
 
 int main()
 {
@@ -48,12 +49,12 @@ int main()
             text_lines.lines[i].line);
     puts("\n");*/
 
-    fputs("==LEXICOGRAPHIC SORT:==\n", output);
+    fputs("==LEXICOGRAPHIC SORT==\n", output);
     qsort(text_lines.lines, text_lines.line_count,
                 sizeof(*text_lines.lines), compare_lines);
     print_lines(text_lines.lines, text_lines.line_count, output);
 
-    fputs("==LINE END LEXICOGRAPHIC SORT:==\n", output);
+    fputs("==LINE END LEXICOGRAPHIC SORT==\n", output);
     insertion_sort(text_lines.lines, text_lines.line_count,
                     sizeof(*text_lines.lines), compare_lines_inverse);
     print_lines(text_lines.lines, text_lines.line_count, output);

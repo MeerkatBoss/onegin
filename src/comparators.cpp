@@ -1,18 +1,17 @@
-#include "comparators.h"
 #include <stdlib.h>
 #include <wctype.h>
 #include <assert.h>
 #include <wchar.h>
+
+#include "comparators.h"
 
 static size_t skip_not_alnum(const char *str,
                              size_t max_skip,
                              enum direction dir,
                              wchar_t *lst)
 {
-    /*printf("\tskip: [%#3lx]\n",
-                (unsigned long)str % 0x1000);*/
     size_t pos = 0;
-    const unsigned char MASK = 0xC0; /*1100 0000 two highest bits*/
+    const unsigned char MASK         = 0xC0; /*1100 0000 two highest bits*/
     const unsigned char CONTINUATION = 0x80; /*10xx xxxx UTF8 continuation byte*/
 
     for(pos = 0; pos < max_skip; pos++)
@@ -25,14 +24,10 @@ static size_t skip_not_alnum(const char *str,
 
         wchar_t wc = L'\0';
         int c_len = mbtowc(&wc, str, MB_CUR_MAX);
-        /*printf("\t\tU+%04x is %d bytes long\n", (wint_t)wc, c_len);*/
+        assert(c_len > 0 && "Corrupt text file.");
+        *lst = wc;
         if (iswalpha((wint_t)wc))
-        {
-            /*printf("\t\twalnum\n");*/
-            *lst = wc;
             break;
-        }
-        /*printf("\t\tnot walnum\n");*/
         str += dir * (long long) c_len;
     }
     return pos;
@@ -43,12 +38,6 @@ int bidirectional_compare_strings(const char* str1, size_t str1_len,
                                enum direction dir)
 {
     size_t index1 = 0, index2 = 0;
-
-    // TODO: i think this implementation is a bit too convoluted
-    //       for what it does (it's not as complex as this looks)
-    //
-    // See, if you can clean this up a bit?) (Mainly reduce number
-    // of edge cases in this code)
 
     for(
         ;
@@ -67,11 +56,9 @@ int bidirectional_compare_strings(const char* str1, size_t str1_len,
         long long remaining1 = (long long)str1_len - (long long)index1;
         long long remaining2 = (long long)str2_len - (long long)index2;
 
-        
         if (remaining1 == 0 ||
             remaining2 == 0)
         {
-            /*printf("\t\tWhole line skipped\n");*/
             if (remaining1 == remaining2)
                 return 0;
             
@@ -82,13 +69,11 @@ int bidirectional_compare_strings(const char* str1, size_t str1_len,
 
         wint_t lwc1 = towlower((wint_t)wc1);
         wint_t lwc2 = towlower((wint_t)wc2);
-        /*printf("\t\tU+%04x ?<>? U+%04x\n", lwc1, lwc2);*/
         if (lwc1 != lwc2)
             return lwc1 < lwc2
                     ? -1
                     :  1;
     }
-    /*printf("\t\tCommon prefix\n");*/
     if (index1 >= str1_len ||
         index2 >= str2_len)
     {
@@ -112,12 +97,6 @@ int compare_lines(const void* a, const void* b)
 
     assert(a_line->line != NULL);
     assert(b_line->line != NULL);
-
-    /*printf("\tcompare: [%#3lx]->[%#3lx] ?<>? [%#3lx]->[%#3lx]\n",
-                (unsigned long)a % 0x1000,
-                (unsigned long)a_line->line % 0x1000,
-                (unsigned long)b % 0x1000,
-                (unsigned long)b_line->line % 0x1000);*/
 
     return bidirectional_compare_strings(
         a_line->line, a_line->line_length,
@@ -150,8 +129,6 @@ int compare_lines_by_address(const void *a, const void *b)
     const Line *a_line = (const Line*) a;
     const Line *b_line = (const Line*) b;
 
-    //TODO: do I need to compare `.line` or can I simply
-    //compare `a` with `b`?
     if (a_line->line == b_line->line)
         return 0;
     return a_line->line < b_line->line

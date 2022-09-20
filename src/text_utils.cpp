@@ -1,5 +1,6 @@
-#include "text_utils.h"
 #include <assert.h>
+
+#include "text_utils.h"
 
 void print_lines(const Line *lines, size_t line_count, FILE *stream)
 {

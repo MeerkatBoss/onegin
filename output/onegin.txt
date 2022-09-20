@@ -1,4 +1,4 @@
-==LEXICOGRAPHIC SORT:==
+==LEXICOGRAPHIC SORT==
 
 
 
@@ -7629,7 +7629,7 @@ XXXVI. XXXVII
 		– Я рад. – «Когда же?» – Хоть сейчас
 		– Я тут еще беды не вижу.
 
-==LINE END LEXICOGRAPHIC SORT:==
+==LINE END LEXICOGRAPHIC SORT==
 
 
 

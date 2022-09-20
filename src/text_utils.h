@@ -12,8 +12,9 @@
  * 
  */
 
-#include "text_lines.h"
 #include <stdio.h>
+
+#include "text_lines.h"
 
 /**
  * @brief Output `Line` array to stream
